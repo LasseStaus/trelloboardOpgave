@@ -3,7 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
-  <body></body>
+  <body>
+    <button class="add-new">Add new hero</button>
+    <main>
+      <form>
+        <label>
+          Title
+          <input type="text" name="title" required />
+        </label>
+        <label>
+          Description
+          <input type="text" name="description" required />
+        </label>
+
+        <label>
+          Date
+          <input type="date" name="date" required />
+        </label>
+
+        <label>
+          Number
+          <input type="number" name="number" required />
+        </label>
+
+        <input type="submit" value="Save" />
+      </form>
+      <div class="container"></div>
+    </main>
+    <template>
+      <article class="superhero">
+        <h1></h1>
+        <h2>also known as <span></span></h2>
+        <h3></h3>
+        <ul></ul>
+        <button>Delete me</button>
+      </article>
+    </template>
+
+    <script src="main.js"></script>
+  </body>
 </html>

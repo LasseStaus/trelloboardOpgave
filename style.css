@@ -1,0 +1,34 @@
+h1 {
+  color: red;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input,
+textarea,
+select,
+label {
+  display: block;
+}
+
+input {
+  border: 1px solid black;
+}
+legend,
+label {
+  font-weight: bold;
+}
+label {
+  cursor: pointer;
+}
+fieldset label,
+fieldset input {
+  font-weight: normal;
+  display: inline-block;
+}
+label,
+fieldset {
+  margin-bottom: 1rem;
+}

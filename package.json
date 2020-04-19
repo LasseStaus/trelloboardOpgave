@@ -1,0 +1,23 @@
+{
+  "name": "trelloboardopgave",
+  "version": "0.0.1",
+  "description": "trelloboard",
+  "main": "main.js",
+  "scripts": {
+    "start": "parcel *.html --open",
+    "build": "parcel build *.html --public-url ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BigMoneyBigCars/trelloboardOpgave.git"
+  },
+  "author": "lasse",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BigMoneyBigCars/trelloboardOpgave/issues"
+  },
+  "homepage": "https://github.com/BigMoneyBigCars/trelloboardOpgave#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}
