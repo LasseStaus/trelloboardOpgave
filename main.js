@@ -2,79 +2,111 @@
 
 window.addEventListener("DOMContentLoaded", start);
 
-const form = document.querySelector("form");
-window.form = form;
-const elements = form.elements;
-window.elements = elements;
-
-form.setAttribute("novalidate", true);
-
-elements.date.value = 12;
+function start() {
+  setupForm();
+  get();
+}
 
 const endpoint = "https://trello-d4aa.restdb.io/rest/trelloboard";
 const apiKey = "5e9844ec436377171a0c2462";
-form.setAttribute("novalidate", true);
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  if (form.checkValidity()) {
-    console.log("submit ready");
-    //send to restdb/api
-  } else {
-    if (!form.elements.title.checkValidity()) {
-      console.log("title is invalid");
-      const err = form.elements.title.validity;
-      if (err.valueMissing) {
-        console.log("please fill in the Title");
-      }
-      // show error for title
-    }
-  }
-  console.log("submitted");
-});
-console.log(elements.date.value);
+function setupForm() {
+  const form = document.querySelector("form");
+  window.form = form;
+  const elements = form.elements;
+  window.elements = elements;
 
-function start() {
-  get();
-  console.log("start");
-  document.querySelector("button.add-new").addEventListener("click", () => {
-    const data = {
-      title: "opgave" + Math.random(),
-      description: "tis",
-    };
-    post(data);
+  form.setAttribute("novalidate", true);
+
+  elements.date.value = 12;
+
+  form.setAttribute("novalidate", true);
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let validForm = true;
+    const formElements = form.querySelectorAll("input");
+    formElements.forEach((el) => {
+      el.classList.remove("invalid");
+    });
+
+    if (form.checkValidity()) {
+      console.log("submit ready");
+      if (form.dataset.state === "post") {
+        postCard({
+          title: form.elements.title.value,
+          description: form.elements.description.value,
+          date: form.elements.date.value,
+          number: form.elements.number.value,
+        });
+      } else {
+        putCard(
+          {
+            title: form.elements.title.value,
+            description: form.elements.description.value,
+            date: form.elements.date.value,
+            number: form.elements.number.value,
+          },
+          form.dataset.id
+        );
+      }
+
+      form.reset();
+      //send to restdb/api
+    } else {
+      formElements.forEach((el) => {
+        if (!el.checkValidity()) {
+          el.classList.add("invalid");
+        }
+      });
+    }
+    console.log("submitted");
   });
 }
-
-function get() {
-  document.querySelector(".container").innerHTML = "";
-  fetch(endpoint + "?max=100", {
-    method: "get",
+function postCard(payLoad) {
+  console.log("hej");
+  const postData = JSON.stringify(payLoad);
+  //showHero(data);
+  fetch(endpoint, {
+    method: "post",
     headers: { "Content-Type": "application/json; charset=utf-8", "x-apikey": apiKey, "cache-control": "no-cache" },
+    body: postData,
   })
-    .then((e) => e.json())
-    .then(showHeroes);
-
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      showHero(data);
+    });
   console.log("get");
 }
 
-function showHeroes(data) {
-  console.log(data);
-  data.forEach(showHero);
-  console.log("SHS");
+function get() {
+  fetch(endpoint, {
+    method: "get",
+    headers: { accept: "application/json", "x-apikey": apiKey, "cache-control": "no-cache" },
+  })
+    .then((e) => e.json())
+    .then((data) => data.forEach(showHero));
+
+  console.log("get");
 }
+const template = document.querySelector("template").content;
 
-function showHero(hero) {
-  console.log(hero);
-  console.log("SH");
-  const template = document.querySelector("template").content;
-  const copy = template.cloneNode(true);
-  const parent = document.querySelector(".container");
-  copy.querySelector("article").dataset.id = hero._id;
-  copy.querySelector("h1").textContent = hero.title;
-  copy.querySelector("h2 span").textContent = hero.description;
-  copy.querySelector("h3").textContent = hero.dob;
+const cardContainer = document.querySelector("#cardlist > .container");
 
-  const ul = copy.querySelector("ul");
+function showHero(card) {
+  console.log(card);
+
+  const clone = template.cloneNode(true);
+
+  clone.querySelector("article").dataset.id = card._id;
+  clone.querySelector("h2").textContent = card.title;
+  clone.querySelector("p").textContent = card.description;
+  clone.querySelector("p + p").textContent = card.title;
+  clone.querySelector("p + p + p").textContent = card.number;
+
+  clone.querySelector(`[data-action="delete"]`).addEventListener("click", (e) => deleteCard(card._id));
+  clone.querySelector(`[data-action="edit"]`).addEventListener("click", (e) => getSingleCard(card._id, setupFormForEdit));
+
+  clone.querySelectorAll(`article, button[data-action="delete"]`).forEach((el) => (el.dataset.id = card._id));
 
   /* hero.powers.forEach((power) => {
     const li = document.createElement("li");
@@ -82,25 +114,46 @@ function showHero(hero) {
 
     ul.appendChild(li);
   }); */
-  copy.querySelector("button").addEventListener("click", () => deleteIt(hero._id));
-  parent.appendChild(copy);
+  //clone.querySelector("button").addEventListener("click", () => deleteIt(card._id));
+  cardContainer.appendChild(clone);
 }
 
-function post(data) {
-  const postData = JSON.stringify(data);
-  //showHero(data);
-  fetch(endpoint, {
-    method: "post",
-    headers: { "Content-Type": "application/json; charset=utf-8", "x-apikey": apiKey, "cache-control": "no-cache" },
+function getSingleCard(id, callback) {
+  console.log(id);
 
-    body: postData,
+  fetch(`${endpoint}/${id}`, {
+    method: "get",
+    headers: { "Content-Type": "application/json; charset=utf-8", "x-apikey": apiKey, "cache-control": "no-cache" },
   })
     .then((res) => res.json())
-    .then((data) => showHero(data));
-  console.log("get");
+    .then((data) => callback(data));
 }
 
-function deleteIt(id) {
+function setupFormForEdit(data) {
+  console.log("hi mom");
+  const form = document.querySelector("form");
+
+  form.dataset.state = "edit";
+  form.dataset.id = data._id;
+  form.elements.title.value = data.title;
+  form.elements.description.value = data.description;
+  form.elements.date.value = data.date;
+  form.elements.number.value = data.number;
+}
+
+function deleteCard(id) {
+  console.log(id);
+
+  fetch(`${endpoint}/${id}`, {
+    method: "delete",
+    headers: { "Content-Type": "application/json; charset=utf-8", "x-apikey": apiKey, "cache-control": "no-cache" },
+  })
+    .then((res) => res.json())
+    .then((data) => console.log(data));
+  document.querySelector(`article[data-id="${id}"]`).remove();
+}
+
+/* function deleteIt(id) {
   document.querySelector(`article[data-id="${id}"]`).remove();
   fetch(`${endpoint}/${id}`, {
     method: "delete",
@@ -108,41 +161,20 @@ function deleteIt(id) {
   })
     .then((res) => res.json())
     .then((data) => console.log(data));
-}
+} */
 
-function put(id) {
-  const data = {
-    real_name: "Peter",
-    alias: "bigmoney" + Math.random(),
-    age: "26",
-    dob: "1993-07-06",
-    powers: ["tis", "guld"],
-  };
-
-  let postData = JSON.stringify(data);
+function putCard(payLoad, id) {
+  console.log("hej");
+  const postData = JSON.stringify(payLoad);
   //showHero(data);
   fetch(`${endpoint}/${id}`, {
     method: "put",
     headers: { "Content-Type": "application/json; charset=utf-8", "x-apikey": apiKey, "cache-control": "no-cache" },
-
     body: postData,
   })
-    .then((d) => d.json())
+    .then((res) => res.json())
     .then((data) => {
-      const copy = document.querySelector(`article[data-id="${id}"]`);
-
-      copy.querySelector("h1").textContent = data.alias;
-      copy.querySelector("h2 span").textContent = data.real_name;
-      copy.querySelector("h3").textContent = data.dob;
-
-      const ul = copy.querySelector("ul");
-
-      data.powers.forEach((power) => {
-        const li = document.createElement("li");
-        li.textContent = power;
-
-        ul.appendChild(li);
-      });
+      console.log(data);
     });
   console.log("get");
 }

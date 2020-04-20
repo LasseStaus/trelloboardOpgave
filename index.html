@@ -9,31 +9,65 @@
   <body>
     <button class="add-new">Add new hero</button>
     <main>
-      <form>
+      <form data-state="post">
         <label>
           Title
           <input type="text" name="title" required />
+          <p>Please provide a title</p>
         </label>
         <label>
           Description
           <input type="text" name="description" required />
+          <p>Please provide a description</p>
         </label>
 
         <label>
           Date
           <input type="date" name="date" required />
+          <p>Please provide a date</p>
         </label>
 
         <label>
           Number
           <input type="number" name="number" required />
+          <p>Please provide a number</p>
         </label>
 
         <input type="submit" value="Save" />
       </form>
+
+      <div class="main-container">
+        <div id="cardlist">
+          <h1>Tasks</h1>
+          <div class="container"></div>
+        </div>
+
+        <div id="progress">
+          <h1>In Progress</h1>
+          <div class="container"></div>
+        </div>
+        <div id="done">
+          <h1>Done</h1>
+          <div class="container"></div>
+        </div>
+      </div>
+
+      <template>
+        <article data-id>
+          <header>
+            <h2>Title</h2>
+            <p>Description</p>
+            <p>Number</p>
+            <p>date</p>
+            <button data-action="delete" class="delete" data-id>delete</button>
+            <button data-action="edit" class="edit" data-id>Edit</button>
+          </header>
+        </article>
+      </template>
+
       <div class="container"></div>
     </main>
-    <template>
+    <template class="yas">
       <article class="superhero">
         <h1></h1>
         <h2>also known as <span></span></h2>

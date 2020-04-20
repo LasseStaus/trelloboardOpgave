@@ -5,6 +5,28 @@ h1 {
 * {
   box-sizing: border-box;
 }
+form {
+  border: 2px solid black;
+}
+
+#cardlist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+}
+.main-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  grid-gap: 2vw;
+}
+.main-container div {
+  background: blue;
+  padding: 1rem;
+  min-height: 500px;
+}
+article {
+  background: white;
+}
 
 input,
 textarea,
@@ -31,4 +53,15 @@ fieldset input {
 label,
 fieldset {
   margin-bottom: 1rem;
+}
+
+.invalid {
+  border: 2px solid red;
+}
+
+input + p {
+  display: none;
+}
+input.invalid + p {
+  display: block;
 }
