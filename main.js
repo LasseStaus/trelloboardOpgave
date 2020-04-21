@@ -3,6 +3,9 @@
 window.addEventListener("DOMContentLoaded", start);
 
 function start() {
+  document.querySelector(".add-container button.add-new").addEventListener("click", () => {
+    showPop();
+  });
   setupForm();
   get();
 }
@@ -37,6 +40,7 @@ function setupForm() {
           date: form.elements.date.value,
           number: form.elements.number.value,
         });
+        hidePop();
       } else {
         putCard(
           {
@@ -47,8 +51,9 @@ function setupForm() {
           },
           form.dataset.id
         );
-      }
 
+        hidePop();
+      }
       form.reset();
       //send to restdb/api
     } else {
@@ -60,6 +65,15 @@ function setupForm() {
     }
     console.log("submitted");
   });
+}
+
+function showPop() {
+  document.querySelector(".form-container").style.display = "flex";
+  document.querySelector(".main-container").classList.add("blur");
+}
+function hidePop() {
+  document.querySelector(".form-container").style.display = "none";
+  document.querySelector(".main-container").classList.remove("blur");
 }
 function postCard(payLoad) {
   console.log("hej");
@@ -89,7 +103,6 @@ function get() {
   console.log("get");
 }
 const template = document.querySelector("template").content;
-
 const cardContainer = document.querySelector("#cardlist > .container");
 
 function showHero(card) {
@@ -100,11 +113,14 @@ function showHero(card) {
   clone.querySelector("article").dataset.id = card._id;
   clone.querySelector("h2").textContent = card.title;
   clone.querySelector("p").textContent = card.description;
-  clone.querySelector("p + p").textContent = card.title;
+  clone.querySelector("p + p").textContent = card.date;
   clone.querySelector("p + p + p").textContent = card.number;
 
   clone.querySelector(`[data-action="delete"]`).addEventListener("click", (e) => deleteCard(card._id));
-  clone.querySelector(`[data-action="edit"]`).addEventListener("click", (e) => getSingleCard(card._id, setupFormForEdit));
+  clone.querySelector(`[data-action="edit"]`).addEventListener("click", (e) => {
+    showPop();
+    getSingleCard(card._id, setupFormForEdit);
+  });
 
   clone.querySelectorAll(`article, button[data-action="delete"]`).forEach((el) => (el.dataset.id = card._id));
 
@@ -116,6 +132,13 @@ function showHero(card) {
   }); */
   //clone.querySelector("button").addEventListener("click", () => deleteIt(card._id));
   cardContainer.appendChild(clone);
+  /* 
+  document.querySelector(".move").onclick = function () {
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(document.querySelector("article"));
+    document.getElementById("progress").appendChild(fragment);
+  }; */
+  console.log("tis");
 }
 
 function getSingleCard(id, callback) {

@@ -3,43 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500;600;700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Quicksand:wght@300;400;500;600&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,500&display=swap" rel="stylesheet" />
+
     <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
-  <body>
-    <button class="add-new">Add new hero</button>
+  <body class="bodypic">
+    <div class="header"></div>
+
     <main>
-      <form data-state="post">
-        <label>
-          Title
-          <input type="text" name="title" required />
-          <p>Please provide a title</p>
-        </label>
-        <label>
-          Description
-          <input type="text" name="description" required />
-          <p>Please provide a description</p>
-        </label>
+      <div class="form-container">
+        <form data-state="post">
+          <label>
+            Title
+            <input type="text" name="title" required />
+            <!--  <svg width="65" height="59" viewBox="0 0 65 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 38L24 57.5L64.5 1" stroke="black" />
+            </svg >-->
+            <p>Please provide a title</p>
+          </label>
+          <label>
+            Description
+            <textarea type="text" name="description"></textarea>
+          </label>
 
-        <label>
-          Date
-          <input type="date" name="date" required />
-          <p>Please provide a date</p>
-        </label>
+          <label>
+            Date
+            <input type="date" name="date" required />
+            <p>Please provide a date</p>
+          </label>
 
-        <label>
-          Number
-          <input type="number" name="number" required />
-          <p>Please provide a number</p>
-        </label>
+          <label>
+            Number
+            <input type="number" name="number" required />
+            <p>Please provide a number</p>
+          </label>
 
-        <input type="submit" value="Save" />
-      </form>
+          <input class="submit" type="submit" value="Save" />
+        </form>
+      </div>
 
       <div class="main-container">
         <div id="cardlist">
           <h1>Tasks</h1>
           <div class="container"></div>
+          <div class="add-container"><i class="fa fa-plus-circle"></i> <button class="add-new">Add new card</button></div>
         </div>
 
         <div id="progress">
@@ -53,15 +62,18 @@
       </div>
 
       <template>
-        <article data-id>
+        <article class="article" data-id>
           <header>
+            <button data-action="edit" class="edit" data-id><i class="fa fa-edit"></i></button>
             <h2>Title</h2>
             <p>Description</p>
             <p>Number</p>
             <p>date</p>
-            <button data-action="delete" class="delete" data-id>delete</button>
-            <button data-action="edit" class="edit" data-id>Edit</button>
+            <div class="buttons">
+              <button data-action="delete" class="delete" data-id><i class="fa fa-trash"></i></button>
+            </div>
           </header>
+          <!--   <button data-action="move-right" class="move">move right</button> -->
         </article>
       </template>
 
